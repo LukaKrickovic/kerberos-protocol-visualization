@@ -35,18 +35,10 @@ const Message = ({
   return (
     <div
       style={{
-        // display: "flex",
-        // justifyContent: "center",
-        // flexDirection: "column",
         height: "300px",
         width: "300px",
       }}
     >
-      {/* <Tooltip
-        title={tooltipText}
-        placement="top"
-        style={{ backgroundColor: "lightblue" }}
-      > */}
       <CustomTooltip
         title={
           <React.Fragment>
@@ -63,6 +55,7 @@ const Message = ({
             {renderFromTo()}
           </Typography>
           {renderText()}
+
           <br />
           {encrypted ? (
             <Button
@@ -84,7 +77,6 @@ const Message = ({
           )}
         </Paper>
       </CustomTooltip>
-      {/* </Tooltip> */}
     </div>
   );
 };
