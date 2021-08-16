@@ -1,5 +1,6 @@
 import React from "react";
 import { useSpring, animated } from "react-spring";
+import Message from "../../../../components/Message";
 
 const FirstMessage = ({ started }) => {
   const fadeIn = useSpring({
@@ -23,6 +24,7 @@ const FirstMessage = ({ started }) => {
           alt="client"
           style={clientStyle}
         ></img>
+        <Message text="Heya" encrypted={true} />
         <img
           src={`${process.env.REACT_APP_CDN_BASE_URL}ticket-computer_khoidw.svg`}
           alt="client"
