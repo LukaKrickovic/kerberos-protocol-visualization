@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useSpring, animated } from "react-spring";
-import { Button, ButtonBase, Typography } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 
 const Title = ({ startFirstMessage }) => {
   const [started, setStarted] = useState(false);
 
-  const title = "The Basics";
+  const title = "Kerberos protocol visualization";
   const AnimatedTitle = () => {
     const titleSpring = useSpring({
       from: {
@@ -13,12 +13,15 @@ const Title = ({ startFirstMessage }) => {
         left: "50%",
         top: "50%",
         transform: "translate(-50%, -50%)",
+        textAlign: "center",
       },
       to: {
         position: "absolute",
         left: "50%",
         top: "5%",
         transform: "translate(-50%, 0%)",
+        textAlign: "center",
+        color: "steelblue",
       },
       config: {
         // duration: 300,
@@ -62,11 +65,14 @@ const Title = ({ startFirstMessage }) => {
           position: "absolute",
           left: "50%",
           top: "50%",
+          textAlign: "center",
           transform: "translate(-50%, 0%)",
         }}
       >
         <Typography variant="h2">{title}</Typography>
-        <AnimatedButton key={started} />
+        <div style={{ marginTop: "10%" }}>
+          <AnimatedButton key={started} />
+        </div>
       </div>
     );
   };

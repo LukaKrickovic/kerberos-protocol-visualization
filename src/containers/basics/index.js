@@ -17,7 +17,9 @@ const Basics = () => {
           setFirstMessageStarted(true);
         }}
       ></Title>
-      <FirstMessage started={firstMessageStarted}></FirstMessage>
+      {firstMessageStarted && (
+        <FirstMessage started={firstMessageStarted}></FirstMessage>
+      )}
     </div>
   );
 };
