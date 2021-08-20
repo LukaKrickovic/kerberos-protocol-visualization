@@ -1,11 +1,17 @@
-import { Button, Modal, Typography } from "@material-ui/core";
+import { Fab, Modal, Typography } from "@material-ui/core";
 import React, { useRef, useState } from "react";
 import { useSpring, animated } from "react-spring";
 import CustomTooltip from "../../../../components/CustomTooltip";
 import Message from "../../../../components/Message";
 import Help from "./Help";
+import IMAGE_ROUTES from "../../../../helpers/images/imageRoutes";
+import ArrowForwardIosTwoToneIcon from "@material-ui/icons/ArrowForwardIosTwoTone";
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import { useHistory } from "react-router-dom";
+import pageRoutes from "../../../../pageroutes";
 
 const FirstMessage = ({ started }) => {
+  const history = useHistory();
   const clientImage = useRef(null);
   const authenticationServiceImage = useRef(null);
   const [isHelpOpen, setHelpOpen] = useState(false);
@@ -122,7 +128,7 @@ const FirstMessage = ({ started }) => {
     </>
   );
 
-  const response2TooltipText = `This message provides the Ticket Granting service with the session key it needs to communicate with the client securely.`;
+  const response2TooltipText = `This is the Ticket granting ticket! It provides the Ticket Granting service with the session key it needs to communicate with the client securely.`;
 
   const MainContainer = () => {
     const containerStyle = {
@@ -137,13 +143,39 @@ const FirstMessage = ({ started }) => {
         <Modal open={isHelpOpen} onClose={() => setHelpOpen(false)}>
           <Help />
         </Modal>
+        <CustomTooltip
+          title={<Typography variant="body1">Second step</Typography>}
+        >
+          <Fab
+            color="primary"
+            style={actionButtonStyle}
+            onClick={() => history.push(pageRoutes.SECOND_STEP)}
+          >
+            <ArrowForwardIosTwoToneIcon />
+          </Fab>
+        </CustomTooltip>
+        <CustomTooltip
+          title={
+            <Typography variant="body1">
+              More information about this step
+            </Typography>
+          }
+        >
+          <Fab
+            color="secondary"
+            style={helpActionButtonStyle}
+            onClick={() => setHelpOpen(true)}
+          >
+            <InfoOutlinedIcon style={{ height: "50%" }} />
+          </Fab>
+        </CustomTooltip>
         <div style={containerStyle}>
           <animated.div style={fadeIn}>
             <CustomTooltip
               title={<Typography variant="body1">The client</Typography>}
             >
               <img
-                src={`${process.env.REACT_APP_CDN_BASE_URL}computer_ftzcnk.svg`}
+                src={IMAGE_ROUTES.CLIENT}
                 alt="client"
                 style={clientStyle}
                 ref={clientImage}
@@ -159,21 +191,12 @@ const FirstMessage = ({ started }) => {
               }
             >
               <img
-                src={`${process.env.REACT_APP_CDN_BASE_URL}ticket-computer_khoidw.svg`}
-                alt="client"
+                src={IMAGE_ROUTES.AUTHENTICATION}
+                alt="Authentication service"
                 style={authStyle}
                 ref={authenticationServiceImage}
               ></img>
             </CustomTooltip>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => {
-                setHelpOpen(!isHelpOpen);
-              }}
-            >
-              Help
-            </Button>
           </animated.div>
         </div>
         <div
@@ -226,6 +249,18 @@ const clientStyle = {
 
 const authStyle = {
   height: "140px",
+};
+
+const actionButtonStyle = {
+  position: "fixed",
+  bottom: "10%",
+  right: "10%",
+};
+
+const helpActionButtonStyle = {
+  position: "fixed",
+  bottom: "10%",
+  right: "5%",
 };
 
 export default FirstMessage;

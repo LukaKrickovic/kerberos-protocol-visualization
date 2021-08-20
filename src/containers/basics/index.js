@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import FirstMessage from "./messages/firstMessage";
 import Title from "./Title";
+import FirstMessage from "./messages/firstMessage";
 
 const Basics = () => {
   const [firstMessageStarted, setFirstMessageStarted] = useState(false);
