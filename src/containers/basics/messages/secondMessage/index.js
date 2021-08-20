@@ -1,4 +1,4 @@
-import { Fab, Modal, Typography } from "@material-ui/core";
+import { Modal, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { useSpring, animated } from "react-spring";
 import CustomTooltip from "../../../../components/CustomTooltip";
@@ -6,16 +6,49 @@ import Message from "../../../../components/Message";
 import Help from "./Help";
 import ANIMATIONS from "./animations";
 import IMAGE_ROUTES from "../../../../helpers/images/imageRoutes";
-import { useHistory } from "react-router-dom";
 import pageRoutes from "../../../../pageroutes";
-import ArrowForwardIosTwoTone from "@material-ui/icons/ArrowForwardIosTwoTone";
-import ArrowBackIosTwoTone from "@material-ui/icons/ArrowBackIosTwoTone";
-import InfoOutlined from "@material-ui/icons/InfoOutlined";
-import VpnKeyIcon from "@material-ui/icons/VpnKey";
+import VerticalNavBar from "../../../../components/NavigationBar/VerticalNavBar";
+import Key from "../../../../components/Key";
 
 const SecondMessage = () => {
   const [isHelpOpen, setHelpOpen] = useState(false);
-  const history = useHistory();
+  const [stepCounter, setStepCounter] = useState(0);
+  const [tgtVisible, setTgtVisible] = useState(true);
+  const [firstMessageVisible, setFirstMessageVisible] = useState(false);
+  const [secondMessageVisible, setSecondMessageVisible] = useState(false);
+  const [serviceTicketVisible, setServiceTicketVisible] = useState(false);
+  const [secondResponseVisible, setSecondResponseVisible] = useState(false);
+
+  const updateStepCounter = (value) => {
+    setStepCounter(value);
+    switch (value) {
+      case 0:
+        setTgtVisible(true);
+        setFirstMessageVisible(false);
+        setSecondMessageVisible(false);
+        setServiceTicketVisible(false);
+        setSecondResponseVisible(false);
+        break;
+      case 1:
+        setFirstMessageVisible(true);
+        setSecondMessageVisible(false);
+        setServiceTicketVisible(false);
+        setSecondResponseVisible(false);
+        break;
+      case 2:
+        setSecondMessageVisible(true);
+        setServiceTicketVisible(false);
+        setSecondResponseVisible(false);
+        break;
+      case 3:
+        setServiceTicketVisible(true);
+        setSecondResponseVisible(false);
+        break;
+      default:
+        setSecondResponseVisible(true);
+        break;
+    }
+  };
 
   const {
     fadeIn,
@@ -23,20 +56,17 @@ const SecondMessage = () => {
     secondMessageIntro,
     tgsIntro,
     serviceTicketIntro,
+    secondResponseIntro,
   } = ANIMATIONS;
 
   const fadeInStyle = useSpring(fadeIn);
-  const messageIntroStyle = useSpring(messageIntro);
-  const secondMessageIntroStyle = useSpring(secondMessageIntro);
-  const tgsIntroStyle = useSpring(tgsIntro);
-  const serviceTicketIntroStyle = useSpring(serviceTicketIntro);
 
   const MainContainer = () => {
     const containerStyle = {
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-evenly",
-      marginTop: "20%",
+      marginTop: "10%",
     };
 
     const FirstMessageText = () => (
@@ -126,56 +156,132 @@ const SecondMessage = () => {
           <br />
           <b>Lifetime of the Service Ticket</b>
           <br />
-          <VpnKeyIcon style={{ color: "steelblue" }} />
-          &nbsp;
-          <b>Service session key</b>
+          <Key name="Service session key" />
         </Typography>
       </>
     );
 
     const ServiceTicketTooltipText =
-      "This message is the Ticket Granting Ticket the client recieved from the authentication service in the previous step.";
+      "This message is the service ticket, which holds the service session key and the user and service metadata.";
+
+    const SecondResponseText = () => (
+      <>
+        <Typography variant="body1">
+          <b>Attributes</b>
+          <br />
+          <b>Service name/ID</b>&nbsp;&nbsp;
+          <em>ie. Message service</em>
+          <br />
+          <b>Timestamp</b>&nbsp;&nbsp;
+          <br />
+          <b>Lifetime</b>
+          <br />
+          <Key name="Service session key" />
+        </Typography>
+      </>
+    );
+
+    const SecondResponseTooltipText =
+      "This message is carryig the service session key, so that the client can encrypt their messages for the requested service. This also allows the service to authenticate the user - if the session key is correct, the message will be decryptable and the user must be authenticated by the Authentication service and the TGS.";
+
+    const AnimatedTGT = () => {
+      const tgsIntroStyle = useSpring(tgsIntro);
+
+      return (
+        <animated.div style={tgsIntroStyle}>
+          <Message
+            text={<TGTText />}
+            encrypted={true}
+            tooltipText={TGTTooltipText}
+            from="TGS"
+            to="Client"
+            encryptedWith="TGS secret key"
+          />
+        </animated.div>
+      );
+    };
+
+    const AnimatedFirstMessage = () => {
+      const messageIntroStyle = useSpring(messageIntro);
+
+      return (
+        <animated.div style={messageIntroStyle}>
+          <Message
+            text={<FirstMessageText />}
+            encrypted={false}
+            tooltipText={firstMessageTooltipText}
+            from="Client"
+            to="TGS"
+          />
+        </animated.div>
+      );
+    };
+
+    const AnimatedSecondMessage = () => {
+      const secondMessageIntroStyle = useSpring(secondMessageIntro);
+
+      return (
+        <animated.div style={secondMessageIntroStyle}>
+          <Message
+            text={<SecondMessageText />}
+            encrypted={true}
+            tooltipText={secondMessageTooltipText}
+            from="Client"
+            to="TGS"
+            encryptedWith="TGS session key"
+          />
+        </animated.div>
+      );
+    };
+
+    const AnimatedServiceTicket = () => {
+      const serviceTicketIntroStyle = useSpring(serviceTicketIntro);
+
+      return (
+        <animated.div style={serviceTicketIntroStyle}>
+          <Message
+            text={<ServiceTicketText />}
+            encrypted={true}
+            tooltipText={ServiceTicketTooltipText}
+            from="Client"
+            to="TGS"
+            encryptedWith="Service secret key"
+          />
+        </animated.div>
+      );
+    };
+
+    const AnimatedSecondResponse = () => {
+      const secondResponseIntroStyle = useSpring(secondResponseIntro);
+
+      return (
+        <animated.div style={secondResponseIntroStyle}>
+          <Message
+            text={<SecondResponseText />}
+            encrypted={true}
+            tooltipText={SecondResponseTooltipText}
+            from="Client"
+            to="TGS"
+            encryptedWith="TGS session key"
+          />
+        </animated.div>
+      );
+    };
 
     return (
       <>
         <Modal open={isHelpOpen} onClose={() => setHelpOpen(false)}>
           <Help />
         </Modal>
-        <CustomTooltip
-          title={<Typography variant="body1">Third step</Typography>}
-        >
-          <Fab
-            color="primary"
-            style={actionButtonStyle}
-            onClick={() => history.push(pageRoutes.SECOND_STEP)}
-          >
-            <ArrowForwardIosTwoTone />
-          </Fab>
-        </CustomTooltip>
-        <CustomTooltip title={<Typography variant="body1">Start</Typography>}>
-          <Fab
-            color="primary"
-            style={backActionButtonStyle}
-            onClick={() => history.push(pageRoutes.START)}
-          >
-            <ArrowBackIosTwoTone />
-          </Fab>
-        </CustomTooltip>
-        <CustomTooltip
-          title={
-            <Typography variant="body1">
-              More information about this step
-            </Typography>
-          }
-        >
-          <Fab
-            color="secondary"
-            style={helpActionButtonStyle}
-            onClick={() => setHelpOpen(true)}
-          >
-            <InfoOutlined style={{ height: "50%" }} />
-          </Fab>
-        </CustomTooltip>
+
+        <VerticalNavBar
+          stepCounter={stepCounter}
+          setStepCounter={updateStepCounter}
+          openHelp={() => setHelpOpen(true)}
+          nextPage={pageRoutes.THIRD_STEP}
+          totalSteps={5}
+        />
+
         <div>
           <Typography
             variant="h2"
@@ -193,6 +299,13 @@ const SecondMessage = () => {
         </div>
         <div style={containerStyle}>
           <animated.div style={fadeInStyle}>
+            <Typography
+              variant="h4"
+              style={{ color: "steelblue" }}
+              gutterBottom
+            >
+              The client
+            </Typography>
             <CustomTooltip
               title={<Typography variant="body1">The client</Typography>}
             >
@@ -203,7 +316,15 @@ const SecondMessage = () => {
               ></img>
             </CustomTooltip>
           </animated.div>
+
           <animated.div style={fadeInStyle}>
+            <Typography
+              variant="h4"
+              style={{ color: "steelblue" }}
+              gutterBottom
+            >
+              The TGS
+            </Typography>
             <CustomTooltip
               title={
                 <Typography variant="body1">
@@ -229,61 +350,11 @@ const SecondMessage = () => {
             paddingTop: "5%",
           }}
         >
-          <animated.div style={tgsIntroStyle}>
-            <Message
-              text={<TGTText />}
-              encrypted={true}
-              tooltipText={TGTTooltipText}
-              from="TGS"
-              to="Client"
-            />
-          </animated.div>
-          <animated.div style={messageIntroStyle}>
-            <Message
-              text={<FirstMessageText />}
-              encrypted={false}
-              tooltipText={firstMessageTooltipText}
-              from="Client"
-              to="TGS"
-            />
-          </animated.div>
-          <animated.div style={secondMessageIntroStyle}>
-            <Message
-              text={<SecondMessageText />}
-              encrypted={true}
-              tooltipText={secondMessageTooltipText}
-              from="Client"
-              to="TGS"
-            />
-          </animated.div>
-          <animated.div style={serviceTicketIntroStyle}>
-            <Message
-              text={<ServiceTicketText />}
-              encrypted={true}
-              tooltipText={ServiceTicketTooltipText}
-              from="Client"
-              to="TGS"
-            />
-          </animated.div>
-
-          {/* <animated.div style={response1Intro}>
-            <Message
-              text={<Response1Text />}
-              encrypted={true}
-              tooltipText={response1TooltipText}
-              from="Authentication service"
-              to="Client"
-            />
-          </animated.div>
-          <animated.div style={response2Intro}>
-            <Message
-              text={<Response2Text />}
-              encrypted={true}
-              tooltipText={response2TooltipText}
-              from="Authentication service"
-              to="Client"
-            />
-          </animated.div> */}
+          {tgtVisible && <AnimatedTGT />}
+          {firstMessageVisible && <AnimatedFirstMessage />}
+          {secondMessageVisible && <AnimatedSecondMessage />}
+          {serviceTicketVisible && <AnimatedServiceTicket />}
+          {secondResponseVisible && <AnimatedSecondResponse />}
         </div>
       </>
     );
@@ -297,24 +368,6 @@ const clientStyle = {
 
 const authStyle = {
   height: "140px",
-};
-
-const actionButtonStyle = {
-  position: "fixed",
-  bottom: "10%",
-  right: "7.5%",
-};
-
-const backActionButtonStyle = {
-  position: "fixed",
-  bottom: "10%",
-  right: "12.5%",
-};
-
-const helpActionButtonStyle = {
-  position: "fixed",
-  bottom: "10%",
-  right: "2.5%",
 };
 
 export default SecondMessage;

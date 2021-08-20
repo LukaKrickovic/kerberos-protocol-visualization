@@ -9,6 +9,7 @@ const Message = ({
   tooltipText = "No available tooltip",
   from,
   to,
+  encryptedWith,
 }) => {
   const [currentlyEncrypted, setCurrentlyEncrypted] = useState(false);
   const [encryptedText, setEncryptedText] = useState("");
@@ -32,6 +33,8 @@ const Message = ({
 
   const renderFromTo = () => `From: ${from}, To: ${to}`;
 
+  const renderLockDiv = () => (encrypted ? "flex" : "none");
+
   return (
     <div
       style={{
@@ -39,6 +42,34 @@ const Message = ({
         width: "300px",
       }}
     >
+      <CustomTooltip
+        title={
+          <Typography variant="body1">
+            This message was encrypted using the <u>{encryptedWith}</u>
+          </Typography>
+        }
+        placement="top"
+      >
+        <div
+          style={{
+            // background: "rgb(41,35,148)",
+            background:
+              "linear-gradient(90deg, rgba(41,35,148,1) 0%, rgba(221,221,222,1) 0%, rgba(161,159,197,1) 0%, rgba(0,91,110,1) 100%)",
+            width: "100%",
+            height: "10%",
+            borderRadius: "5px",
+            display: renderLockDiv(),
+            justifyContent: "center",
+          }}
+        >
+          <Typography
+            variant="body1"
+            style={{ color: "white", marginTop: "auto", marginBottom: "auto" }}
+          >
+            <b>{encryptedWith}</b>
+          </Typography>
+        </div>
+      </CustomTooltip>
       <CustomTooltip
         title={
           <React.Fragment>
