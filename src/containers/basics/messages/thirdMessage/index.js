@@ -7,6 +7,7 @@ import Message from "../../../../components/Message";
 import VerticalNavBar from "../../../../components/NavigationBar/VerticalNavBar";
 import IMAGE_ROUTES from "../../../../helpers/images/imageRoutes";
 import pageRoutes from "../../../../pageroutes";
+import PostPresentationNavigation from "../../../postPresentationNavigation";
 import ANIMATIONS from "./animations";
 import Help from "./Help";
 
@@ -18,6 +19,8 @@ const ThirdMessage = () => {
     useState(false);
   const [serviceAuthenticatorVisible, setServiceAuthenticatorVisible] =
     useState(false);
+  const [postNavigationOpen, setPostNavigationOpen] = useState(false);
+  const [cacheVisible, setCacheVisible] = useState(false);
 
   const updateStepCounter = (value) => {
     setStepCounter(value);
@@ -26,9 +29,15 @@ const ThirdMessage = () => {
         setServiceTicketVisible(true);
         setUserAuthenticatorVisible(false);
         setServiceAuthenticatorVisible(false);
+        setCacheVisible(false);
         break;
       case 1:
         setUserAuthenticatorVisible(true);
+        setServiceAuthenticatorVisible(false);
+        setCacheVisible(false);
+        break;
+      case 2:
+        setCacheVisible(true);
         setServiceAuthenticatorVisible(false);
         break;
       default:
@@ -41,6 +50,7 @@ const ThirdMessage = () => {
     serviceTicketIntro,
     userAuthenticatorIntro,
     serviceAuthenticatorIntro,
+    cacheIntro,
   } = ANIMATIONS;
 
   const fadeInStyle = useSpring(fadeIn);
@@ -173,18 +183,49 @@ const ThirdMessage = () => {
       );
     };
 
+    const AnimatedCacheMark = () => {
+      const cacheIntroStyle = useSpring(cacheIntro);
+      const tooltipMessage = "This message is cached";
+
+      return (
+        <CustomTooltip
+          title={
+            <Typography variant="body1">
+              {tooltipMessage} to prevent replay attacks.
+            </Typography>
+          }
+        >
+          <animated.div style={cacheIntroStyle}>
+            <img
+              src={IMAGE_ROUTES.DATABASE}
+              alt={tooltipMessage}
+              style={{ height: "100px" }}
+            />
+          </animated.div>
+        </CustomTooltip>
+      );
+    };
+
     return (
       <>
         <Modal open={isHelpOpen} onClose={() => setHelpOpen(false)}>
           <Help />
+        </Modal>
+        <Modal
+          open={postNavigationOpen}
+          onClose={() => setPostNavigationOpen(false)}
+        >
+          <PostPresentationNavigation />
         </Modal>
 
         <VerticalNavBar
           stepCounter={stepCounter}
           setStepCounter={updateStepCounter}
           openHelp={() => setHelpOpen(true)}
-          nextPage={pageRoutes.SECOND_STEP}
-          totalSteps={3}
+          nextPage={pageRoutes.POST_PRESENTATION_NAVGATION}
+          totalSteps={4}
+          final={true}
+          openNavigationModal={() => setPostNavigationOpen(true)}
         />
 
         <div>
@@ -253,6 +294,7 @@ const ThirdMessage = () => {
         >
           {serviceTicketVisible && <AnimatedServiceTicket />}
           {userAuthenticatorVisible && <AnimatedUserAuthenticator />}
+          {cacheVisible && <AnimatedCacheMark />}
           {serviceAuthenticatorVisible && <AnimatedServiceAuthenticator />}
         </div>
       </>

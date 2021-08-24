@@ -7,11 +7,11 @@ const Help = () => {
       style={{
         position: "absolute",
         left: "50%",
-        transform: "translate(-50%, 2.5%)",
+        transform: "translate(-50%, 5%)",
         width: "50%",
       }}
     >
-      <Paper style={{ padding: "10%", paddingBottom: "5%", overflowY: "auto" }}>
+      <Paper style={{ padding: "10%", overflowY: "auto" }}>
         <Typography variant="h3">Explanation</Typography>
         <br />
         <Typography variant="body1">

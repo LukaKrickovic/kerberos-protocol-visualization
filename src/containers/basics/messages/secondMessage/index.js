@@ -16,6 +16,7 @@ const SecondMessage = () => {
   const [tgtVisible, setTgtVisible] = useState(true);
   const [firstMessageVisible, setFirstMessageVisible] = useState(false);
   const [secondMessageVisible, setSecondMessageVisible] = useState(false);
+  const [cacheVisible, setCacheVisible] = useState(false);
   const [serviceTicketVisible, setServiceTicketVisible] = useState(false);
   const [secondResponseVisible, setSecondResponseVisible] = useState(false);
 
@@ -26,21 +27,29 @@ const SecondMessage = () => {
         setTgtVisible(true);
         setFirstMessageVisible(false);
         setSecondMessageVisible(false);
+        setCacheVisible(false);
         setServiceTicketVisible(false);
         setSecondResponseVisible(false);
         break;
       case 1:
         setFirstMessageVisible(true);
         setSecondMessageVisible(false);
+        setCacheVisible(false);
         setServiceTicketVisible(false);
         setSecondResponseVisible(false);
         break;
       case 2:
         setSecondMessageVisible(true);
         setServiceTicketVisible(false);
+        setCacheVisible(false);
         setSecondResponseVisible(false);
         break;
       case 3:
+        setCacheVisible(true);
+        setServiceTicketVisible(false);
+        setSecondResponseVisible(false);
+        break;
+      case 4:
         setServiceTicketVisible(true);
         setSecondResponseVisible(false);
         break;
@@ -57,6 +66,7 @@ const SecondMessage = () => {
     tgsIntro,
     serviceTicketIntro,
     secondResponseIntro,
+    cacheIntro,
   } = ANIMATIONS;
 
   const fadeInStyle = useSpring(fadeIn);
@@ -268,6 +278,29 @@ const SecondMessage = () => {
       );
     };
 
+    const AnimatedCacheMark = () => {
+      const cacheIntroStyle = useSpring(cacheIntro);
+      const tooltipMessage = "This message is cached";
+
+      return (
+        <CustomTooltip
+          title={
+            <Typography variant="body1">
+              {tooltipMessage} to prevent replay attacks.
+            </Typography>
+          }
+        >
+          <animated.div style={cacheIntroStyle}>
+            <img
+              src={IMAGE_ROUTES.DATABASE}
+              alt={tooltipMessage}
+              style={{ height: "100px" }}
+            />
+          </animated.div>
+        </CustomTooltip>
+      );
+    };
+
     return (
       <>
         <Modal open={isHelpOpen} onClose={() => setHelpOpen(false)}>
@@ -279,7 +312,8 @@ const SecondMessage = () => {
           setStepCounter={updateStepCounter}
           openHelp={() => setHelpOpen(true)}
           nextPage={pageRoutes.THIRD_STEP}
-          totalSteps={5}
+          totalSteps={6}
+          final={false}
         />
 
         <div>
@@ -353,6 +387,7 @@ const SecondMessage = () => {
           {tgtVisible && <AnimatedTGT />}
           {firstMessageVisible && <AnimatedFirstMessage />}
           {secondMessageVisible && <AnimatedSecondMessage />}
+          {cacheVisible && <AnimatedCacheMark />}
           {serviceTicketVisible && <AnimatedServiceTicket />}
           {secondResponseVisible && <AnimatedSecondResponse />}
         </div>

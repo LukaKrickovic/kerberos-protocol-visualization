@@ -13,8 +13,14 @@ const VerticalNavBar = ({
   openHelp,
   nextPage,
   totalSteps,
+  final,
+  openNavigationModal,
 }) => {
   const history = useHistory();
+  const nextPageLogic = () => {
+    if (final) openNavigationModal();
+    else history.push(nextPage);
+  };
   return (
     <div
       style={{
@@ -66,7 +72,7 @@ const VerticalNavBar = ({
       </CustomTooltip>
       <CustomTooltip title={<Typography variant="body1">Next page</Typography>}>
         <Button
-          onClick={() => history.push(nextPage)}
+          onClick={() => nextPageLogic()}
           style={{ color: "lightslategrey" }}
         >
           <FastForwardIcon />
