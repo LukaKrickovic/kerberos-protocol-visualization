@@ -185,7 +185,6 @@ const FirstMessage = () => {
           totalSteps={3}
           final={false}
         />
-        <LanguageSelect />
         <div style={containerStyle}>
           <animated.div style={fadeInStyle}>
             <Typography
