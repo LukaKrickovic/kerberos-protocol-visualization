@@ -7,6 +7,12 @@ const ANIMATIONS = {
     to: { opacity: 1 },
     config: { duration: fadeInPeriod },
   },
+  cacheIntro: {
+    from: { opacity: 0 },
+    to: { opacity: 1, marginLeft: "80%", marginTop: "7.5%" },
+    config: { duration: fadeInPeriod / 2 },
+    delay: 3 * messageDelayPeriod,
+  },
   tgsIntro: {
     from: { opacity: 0, height: "0", width: "0", marginLeft: "-50%" },
     to: {
@@ -50,10 +56,10 @@ const ANIMATIONS = {
       width: "wrap-content",
       marginLeft: "20%",
       position: "absolute",
-      marginTop: "-35%",
+      marginTop: "-50%",
       // top: "67%",
     },
-    delay: 3 * messageDelayPeriod,
+    delay: 4 * messageDelayPeriod,
   },
   secondResponseIntro: {
     from: { opacity: 0, height: "0", width: "0", marginLeft: "100%" },
@@ -62,9 +68,9 @@ const ANIMATIONS = {
       height: "wrap-content",
       width: "wrap-content",
       marginLeft: "20%",
-      marginTop: "-10%",
+      marginTop: "-25%",
     },
-    delay: 4 * messageDelayPeriod,
+    delay: 5 * messageDelayPeriod,
   },
 };
 

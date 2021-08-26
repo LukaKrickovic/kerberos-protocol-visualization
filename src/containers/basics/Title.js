@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { useSpring, animated } from "react-spring";
 import { Button, Typography } from "@material-ui/core";
+import { useTranslation, Trans } from "react-i18next";
 
 const Title = ({ startFirstMessage }) => {
-  const [started, setStarted] = useState(false);
+  const [started, setStarted] = useState(true);
+  const { t, i18n } = useTranslation();
 
-  const title = "Kerberos protocol visualization";
+  const title = () => (
+    <Trans i18nKey="firstPage.title">Kerberos protocol visualization</Trans>
+  );
   const AnimatedTitle = () => {
     const titleSpring = useSpring({
       from: {
@@ -30,7 +34,10 @@ const Title = ({ startFirstMessage }) => {
 
     return (
       <animated.div style={titleSpring}>
-        <Typography variant="h2">{title}</Typography>
+        <Typography variant="h2">
+          {/* <Trans>{title}</Trans> */}
+          {title()}
+        </Typography>
       </animated.div>
     );
   };
@@ -69,7 +76,7 @@ const Title = ({ startFirstMessage }) => {
           transform: "translate(-50%, 0%)",
         }}
       >
-        <Typography variant="h2">{title}</Typography>
+        <Typography variant="h2">{title()}</Typography>
         <div style={{ marginTop: "10%" }}>
           <AnimatedButton key={started} />
         </div>

@@ -2,6 +2,8 @@ import { Button, Paper, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import encrypt from "../../helpers/encryption/aes";
 import CustomTooltip from "../CustomTooltip";
+import LockIcon from "@material-ui/icons/Lock";
+import Lock from "@material-ui/icons/Lock";
 
 const Message = ({
   encrypted = false,
@@ -62,6 +64,10 @@ const Message = ({
             justifyContent: "center",
           }}
         >
+          <Lock
+            style={{ color: "white", marginTop: "auto", marginBottom: "auto" }}
+          />{" "}
+          &nbsp;
           <Typography
             variant="body1"
             style={{ color: "white", marginTop: "auto", marginBottom: "auto" }}

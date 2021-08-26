@@ -1,141 +1,174 @@
-import { Fab, Modal, Typography } from "@material-ui/core";
-import React, { useRef, useState } from "react";
-import { useSpring, animated } from "react-spring";
-import CustomTooltip from "../../../../components/CustomTooltip";
+import { Modal, Typography } from "@material-ui/core";
+import { useSpring } from "@react-spring/core";
+import { animated } from "@react-spring/web";
+import React, { useState } from "react";
+import Key from "../../../../components/Key";
+import ANIMATIONS from "./animations";
 import Message from "../../../../components/Message";
 import Help from "./Help";
-import IMAGE_ROUTES from "../../../../helpers/images/imageRoutes";
-import ArrowForwardIosTwoToneIcon from "@material-ui/icons/ArrowForwardIosTwoTone";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-import { useHistory } from "react-router-dom";
+import VerticalNavBar from "../../../../components/NavigationBar/VerticalNavBar";
 import pageRoutes from "../../../../pageroutes";
+import CustomTooltip from "../../../../components/CustomTooltip";
+import IMAGE_ROUTES from "../../../../helpers/images/imageRoutes";
+import LanguageSelect from "../../../../components/LanguageSelect";
 
-const FirstMessage = ({ started }) => {
-  const history = useHistory();
-  const clientImage = useRef(null);
-  const authenticationServiceImage = useRef(null);
+const FirstMessage = () => {
+  const [firstMessageVisible, setFirstMessageVisible] = useState(true);
+  const [firstResponseVisible, setFirstResponseVisible] = useState(false);
+  const [tgtVisible, setTgtVisible] = useState(false);
+  const [stepCounter, setStepCounter] = useState(0);
   const [isHelpOpen, setHelpOpen] = useState(false);
 
-  const getResponseLeftMargin = () =>
-    clientImage.current
-      ? clientImage.current.getBoundingClientRect().left
-      : "20%";
+  const updateStepCounter = (value) => {
+    setStepCounter(value);
+    switch (value) {
+      case 0:
+        setFirstMessageVisible(true);
+        setFirstResponseVisible(false);
+        setTgtVisible(false);
+        break;
+      case 1:
+        setFirstResponseVisible(true);
+        setTgtVisible(false);
+        break;
+      default:
+        setTgtVisible(true);
+        break;
+    }
+  };
 
-  const fadeIn = useSpring({
-    from: { opacity: 0 },
-    to: { opacity: 1 },
-    config: { duration: 1000 },
-  });
+  const { fadeIn, firstMessageIntro, firstResponseIntro, tgtIntro } =
+    ANIMATIONS;
 
-  const messageIntro = useSpring({
-    from: { opacity: 0, height: "0", width: "0", marginLeft: "-50%" },
-    to: {
-      opacity: 1,
-      height: "wrap-content",
-      width: "wrap-content",
-      marginLeft: "60%",
-    },
-  });
-  const response1Intro = useSpring({
-    from: { opacity: 0, height: "0", width: "0", marginLeft: "100%" },
-    to: {
-      opacity: 1,
-      height: "wrap-content",
-      width: "wrap-content",
-      marginLeft: getResponseLeftMargin(),
-    },
-    delay: 1000,
-  });
-  const response2Intro = useSpring({
-    from: { opacity: 0, height: "0", width: "0", marginLeft: "100%" },
-    to: {
-      opacity: 1,
-      height: "wrap-content",
-      width: "wrap-content",
-      marginLeft: getResponseLeftMargin(),
-      marginTop: "20%",
-    },
-    delay: 1000,
-  });
-
-  const FirstMessageText = () => (
-    <>
-      <Typography variant="body1">
-        <b>Attributes</b>
-        <br />
-        <b>Username/ID</b>&nbsp;&nbsp;
-        <a
-          href="https://github.com/LukaKrickovic"
-          style={{ textDecoration: "none", color: "black" }}
-        >
-          <em>ie. LukaKrickovic</em>
-        </a>
-        <br />
-        <b>Service name/ID</b>&nbsp;&nbsp;
-        <em>ie. Message service</em>
-        <br />
-        <b>User IP address</b>&nbsp;&nbsp;
-        <em>can be null/one/many</em>
-        <br />
-        <b>Requested lifetime of TGT</b>
-      </Typography>
-    </>
-  );
-
-  const messageTooltipText = `The client sends this message to authenticate itself.`;
-
-  const Response1Text = () => (
-    <>
-      <Typography variant="body1">
-        <b>Attributes</b>
-        <br />
-        <b>TGS name/ID</b>
-        <br />
-        <b>Timestamp</b>
-        <br />
-        <b>Lifetime</b>&nbsp;&nbsp;
-        <em>Same as the TicketGrantingTicket</em>
-        <br />
-        <b>Ticket Granting Server (TGS) session key</b>
-      </Typography>
-    </>
-  );
-
-  const response1TooltipText = `Only the client can read this message as it's encrypted using a key derived from the clients password.`;
-
-  const Response2Text = () => (
-    <>
-      <Typography variant="body1">
-        <b>Attributes</b>
-        <br />
-        <b>Username/ID</b>&nbsp;&nbsp;
-        <a
-          href="https://github.com/LukaKrickovic"
-          style={{ textDecoration: "none", color: "black" }}
-        >
-          <em>ie. LukaKrickovic</em>
-        </a>
-        <br />
-        <b>TGS name/ID</b>&nbsp;&nbsp;
-        <br />
-        <b>Timestamp</b>&nbsp;&nbsp;
-        <br />
-        <b>User IP address</b>&nbsp;&nbsp;
-        <em>can be null/one/many</em>
-        <br />
-        <b>Lifetime of TGT</b>
-      </Typography>
-    </>
-  );
-
-  const response2TooltipText = `This is the Ticket granting ticket! It provides the Ticket Granting service with the session key it needs to communicate with the client securely.`;
+  const fadeInStyle = useSpring(fadeIn);
 
   const MainContainer = () => {
     const containerStyle = {
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-evenly",
-      marginTop: "20%",
+      marginTop: "15%",
+    };
+    const FirstMessageText = () => (
+      <>
+        <Typography variant="body1">
+          <b>Attributes</b>
+          <br />
+          <b>Username/ID</b>&nbsp;&nbsp;
+          <a
+            href="https://github.com/LukaKrickovic"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <em>ie. LukaKrickovic</em>
+          </a>
+          <br />
+          <b>Service name/ID</b>&nbsp;&nbsp;
+          <em>ie. Message service</em>
+          <br />
+          <b>User IP address</b>&nbsp;&nbsp;
+          <em>can be null/one/many</em>
+          <br />
+          <b>Requested lifetime of TGT</b>
+        </Typography>
+      </>
+    );
+
+    const firstMessageTooltipText = `The client sends this message to authenticate itself.`;
+
+    const FirstResponseText = () => (
+      <>
+        <Typography variant="body1">
+          <b>Attributes</b>
+          <br />
+          <b>TGS name/ID</b>
+          <br />
+          <b>Timestamp</b>
+          <br />
+          <b>Lifetime</b>&nbsp;&nbsp;
+          <em>Same as the TicketGrantingTicket</em>
+          <br />
+          <Key name="TGS session key" />
+        </Typography>
+      </>
+    );
+
+    const FirstResponseTooltipText = `Only the client can read this message as it's encrypted using a key derived from the clients password.`;
+
+    const TGTText = () => (
+      <>
+        <Typography variant="body1">
+          <b>Attributes</b>
+          <br />
+          <b>Username/ID</b>&nbsp;&nbsp;
+          <a
+            href="https://github.com/LukaKrickovic"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <em>ie. LukaKrickovic</em>
+          </a>
+          <br />
+          <b>TGS name/ID</b>&nbsp;&nbsp;
+          <br />
+          <b>Timestamp</b>&nbsp;&nbsp;
+          <br />
+          <b>User IP address</b>&nbsp;&nbsp;
+          <em>can be null/one/many</em>
+          <br />
+          <b>Lifetime of TGT</b>
+        </Typography>
+      </>
+    );
+
+    const TGTTooltipText = `This is the Ticket granting ticket! It provides the Ticket Granting service with the session key it needs to communicate with the client securely.`;
+
+    const AnimatedFirstMessage = () => {
+      const firstMessageIntroStyle = useSpring(firstMessageIntro);
+
+      return (
+        <animated.div style={firstMessageIntroStyle}>
+          <Message
+            text={<FirstMessageText />}
+            encrypted={false}
+            tooltipText={firstMessageTooltipText}
+            from="Client"
+            to="Authentication service"
+          />
+        </animated.div>
+      );
+    };
+
+    const AnimatedFirstResponse = () => {
+      const firstResponseIntroStyle = useSpring(firstResponseIntro);
+
+      return (
+        <animated.div style={firstResponseIntroStyle}>
+          <Message
+            text={<FirstResponseText />}
+            encrypted={true}
+            tooltipText={FirstResponseTooltipText}
+            to="Client"
+            from="Authentication service"
+            encryptedWith="Client password derived key"
+          />
+        </animated.div>
+      );
+    };
+
+    const AnimatedTGT = () => {
+      const tgtIntroStyle = useSpring(tgtIntro);
+
+      return (
+        <animated.div style={tgtIntroStyle}>
+          <Message
+            text={<TGTText />}
+            encrypted={true}
+            tooltipText={TGTTooltipText}
+            to="Client"
+            from="Authentication service"
+            encryptedWith="TGS secret key"
+          />
+        </animated.div>
+      );
     };
 
     return (
@@ -143,34 +176,24 @@ const FirstMessage = ({ started }) => {
         <Modal open={isHelpOpen} onClose={() => setHelpOpen(false)}>
           <Help />
         </Modal>
-        <CustomTooltip
-          title={<Typography variant="body1">Second step</Typography>}
-        >
-          <Fab
-            color="primary"
-            style={actionButtonStyle}
-            onClick={() => history.push(pageRoutes.SECOND_STEP)}
-          >
-            <ArrowForwardIosTwoToneIcon />
-          </Fab>
-        </CustomTooltip>
-        <CustomTooltip
-          title={
-            <Typography variant="body1">
-              More information about this step
-            </Typography>
-          }
-        >
-          <Fab
-            color="secondary"
-            style={helpActionButtonStyle}
-            onClick={() => setHelpOpen(true)}
-          >
-            <InfoOutlinedIcon style={{ height: "50%" }} />
-          </Fab>
-        </CustomTooltip>
+
+        <VerticalNavBar
+          stepCounter={stepCounter}
+          setStepCounter={updateStepCounter}
+          openHelp={() => setHelpOpen(true)}
+          nextPage={pageRoutes.SECOND_STEP}
+          totalSteps={3}
+          final={false}
+        />
         <div style={containerStyle}>
-          <animated.div style={fadeIn}>
+          <animated.div style={fadeInStyle}>
+            <Typography
+              variant="h4"
+              style={{ color: "steelblue" }}
+              gutterBottom
+            >
+              The client
+            </Typography>
             <CustomTooltip
               title={<Typography variant="body1">The client</Typography>}
             >
@@ -178,11 +201,18 @@ const FirstMessage = ({ started }) => {
                 src={IMAGE_ROUTES.CLIENT}
                 alt="client"
                 style={clientStyle}
-                ref={clientImage}
               ></img>
             </CustomTooltip>
           </animated.div>
-          <animated.div>
+
+          <animated.div style={fadeInStyle}>
+            <Typography
+              variant="h4"
+              style={{ color: "steelblue" }}
+              gutterBottom
+            >
+              Auth service
+            </Typography>
             <CustomTooltip
               title={
                 <Typography variant="body1">
@@ -192,9 +222,8 @@ const FirstMessage = ({ started }) => {
             >
               <img
                 src={IMAGE_ROUTES.AUTHENTICATION}
-                alt="Authentication service"
+                alt="The authentication service"
                 style={authStyle}
-                ref={authenticationServiceImage}
               ></img>
             </CustomTooltip>
           </animated.div>
@@ -202,45 +231,22 @@ const FirstMessage = ({ started }) => {
         <div
           style={{
             backgroundColor: "ghostwhite",
-            height: "100%",
+            height: "800px",
+            width: "100%",
             marginTop: "5%",
             marginBottom: "10%",
             paddingTop: "5%",
           }}
         >
-          <animated.div style={messageIntro}>
-            <Message
-              text={<FirstMessageText />}
-              encrypted={false}
-              tooltipText={messageTooltipText}
-              from="Client"
-              to="Authentication service"
-            />
-          </animated.div>
-
-          <animated.div style={response1Intro}>
-            <Message
-              text={<Response1Text />}
-              encrypted={true}
-              tooltipText={response1TooltipText}
-              from="Authentication service"
-              to="Client"
-            />
-          </animated.div>
-          <animated.div style={response2Intro}>
-            <Message
-              text={<Response2Text />}
-              encrypted={true}
-              tooltipText={response2TooltipText}
-              from="Authentication service"
-              to="Client"
-            />
-          </animated.div>
+          {firstMessageVisible && <AnimatedFirstMessage />}
+          {firstResponseVisible && <AnimatedFirstResponse />}
+          {tgtVisible && <AnimatedTGT />}
         </div>
       </>
     );
   };
-  return <MainContainer key={started} />;
+
+  return <MainContainer />;
 };
 
 const clientStyle = {
@@ -249,18 +255,6 @@ const clientStyle = {
 
 const authStyle = {
   height: "140px",
-};
-
-const actionButtonStyle = {
-  position: "fixed",
-  bottom: "10%",
-  right: "10%",
-};
-
-const helpActionButtonStyle = {
-  position: "fixed",
-  bottom: "10%",
-  right: "5%",
 };
 
 export default FirstMessage;

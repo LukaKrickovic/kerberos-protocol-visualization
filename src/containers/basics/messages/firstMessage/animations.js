@@ -9,7 +9,7 @@ const ANIMATIONS = {
     },
     config: { duration: fadeInPeriod },
   },
-  tgsIntro: {
+  firstMessageIntro: {
     from: { opacity: 0, height: "0", width: "0", marginLeft: "-50%" },
     to: {
       opacity: 1,
@@ -18,41 +18,28 @@ const ANIMATIONS = {
       marginLeft: "60%",
     },
   },
-  userAuthenticatorIntro: {
-    from: { opacity: 0, height: "0", width: "0", marginLeft: "-50%" },
-    to: {
-      opacity: 1,
-      height: "wrap-content",
-      width: "wrap-content",
-      marginLeft: "60%",
-      marginTop: "25%",
-    },
-    delay: messageDelayPeriod,
-  },
-  serviceTicketIntro: {
-    from: { opacity: 0, height: "0", width: "0", marginLeft: "-50%" },
-    to: {
-      opacity: 1,
-      height: "wrap-content",
-      width: "wrap-content",
-      marginLeft: "60%",
-    },
-  },
-  serviceAuthenticatorIntro: {
+
+  firstResponseIntro: {
     from: { opacity: 0, height: "0", width: "0", marginLeft: "100%" },
     to: {
       opacity: 1,
       height: "wrap-content",
       width: "wrap-content",
       marginLeft: "20%",
-      marginTop: "-40%",
+      // marginTop: "-25%",
     },
-    delay: 3 * messageDelayPeriod,
+    delay: messageDelayPeriod,
   },
-  cacheIntro: {
-    from: { opacity: 0 },
-    to: { opacity: 1, marginLeft: "80%", marginTop: "7.5%" },
-    config: { duration: fadeInPeriod / 2 },
+
+  tgtIntro: {
+    from: { opacity: 0, height: "0", width: "0", marginLeft: "100%" },
+    to: {
+      opacity: 1,
+      height: "wrap-content",
+      width: "wrap-content",
+      marginLeft: "20%",
+      marginTop: "22.5%",
+    },
     delay: 2 * messageDelayPeriod,
   },
 };
